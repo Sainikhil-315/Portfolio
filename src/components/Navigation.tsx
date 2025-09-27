@@ -68,7 +68,7 @@ const Navigation = () => {
                 Sai Nikhil
               </span>
             </motion.div>
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
           </div>
 
           {/* Desktop Navigation */}

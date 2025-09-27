@@ -36,6 +36,7 @@ const Hero = () => {
               transition={{ duration: 0.8, ease: 'easeOut' }}
               className="space-y-4"
             >
+              
               <motion.h1 
                 className="text-6xl lg:text-8xl font-playfair font-bold"
                 initial={{ opacity: 0, y: 100 }}
@@ -44,8 +45,11 @@ const Hero = () => {
               >
                 <span className="block text-gradient">Sai Nikhil</span>
                 <span className="block">Mullapudi</span>
+                <span className='text-sm lg:text-sm font-playfair font-bold text-white'>Portfolio under progress</span>
               </motion.h1>
-              
+              <motion.h2 className="text-2xl lg:text-2xl font-playfair font-bold">
+                <span className="block text-gradient">Web Developer</span>
+              </motion.h2>
               <motion.p 
                 className="text-xl text-muted-foreground max-w-lg leading-relaxed"
                 initial={{ opacity: 0, y: 50 }}
@@ -89,7 +93,7 @@ const Hero = () => {
             >
               <Button 
                 size="lg" 
-                className="group premium-border hover-lift glow-effect bg-primary text-primary-foreground hover:bg-primary/90"
+                className="group premium-border hover-lift glow-effect bg-primary text-white hover:bg-primary/90"
               >
                 <Download className="mr-2 h-5 w-5 group-hover:animate-bounce" />
                 Download Resume

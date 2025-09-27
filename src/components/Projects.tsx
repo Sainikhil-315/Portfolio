@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Github, ExternalLink } from 'lucide-react';
+import { Github, ExternalLink, Dock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Projects = () => {
@@ -7,41 +7,41 @@ const Projects = () => {
     {
       id: 1,
       title: 'Voice2Action',
-      description: 'An innovative voice-controlled application that converts spoken commands into actionable tasks. Features real-time speech recognition, natural language processing, and seamless integration with various productivity tools and smart home devices.',
-      technologies: ['React', 'Node.js', 'Web Speech API', 'Natural Language Processing', 'Express.js'],
-      github: 'https://github.com/placeholder/voice2action',
+      description: 'Voice2Action lets citizens report civic issues via voice, text, photos, or videos with GPS tagging and offline support. Users can track progress in real time through dashboards and notifications, building transparency. Admins get tools for verification, analytics, and authority coordination to speed up resolutions. Authorities receive instant SMS/email alerts with media access for efficient handling. A leaderboard and community stats foster healthy competition and civic participation.',
+      technologies: ['React', 'Node.js', 'MongoDB', 'Express.js', 'Socket.io', 'Leaflet', 'Twilio API', 'Cloudinary', 'Tailwind CSS'],
+      github: 'https://github.com/Sainikhil-315/Voice2Action',
       liveLink: 'https://voice2action-demo.com'
     },
     {
       id: 2,
       title: 'AQVH',
-      description: 'Advanced Quality Verification Hub - A comprehensive quality assurance platform designed for manufacturing and production environments. Provides real-time monitoring, automated testing workflows, and detailed analytics for quality control processes.',
-      technologies: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Express.js', 'Chart.js'],
-      github: 'https://github.com/placeholder/aqvh',
+      description: 'The AQVH project explores hybrid optimization by combining classical heuristics with quantum-inspired algorithms to solve complex Vehicle Routing Problems (VRP). It features a scalable backend built with FastAPI, enabling modular handling of routing, distance management, and optimization workflows. The system is quantum-ready, running on simulators like Qiskit Aer and adaptable to future quantum hardware. An interactive frontend allows users to compare routes, benchmark algorithms, and analyze costs effectively',
+      technologies: ['React', 'Tailwind CSS', 'Node.js', 'MongoDB', 'Express.js', 'Chart.js', 'FastAPI', 'Qiskit', 'Python'],
+      github: 'https://github.com/Sainikhil-315/AQVH---delivery-vehicles',
       liveLink: 'https://aqvh-demo.com'
     },
     {
       id: 3,
       title: 'Telemedicine Chatbot',
-      description: 'AI-powered healthcare chatbot that provides preliminary medical consultations and connects patients with healthcare providers. Features symptom assessment, appointment scheduling, medical history tracking, and emergency routing capabilities.',
-      technologies: ['React', 'Node.js', 'OpenAI API', 'Socket.io', 'MongoDB', 'Express.js'],
-      github: 'https://github.com/placeholder/telemedicine-chatbot',
+      description: 'This project delivers a web-based chatbot for real-time medical consultations, symptom analysis, and preliminary health guidance. It integrates appointment scheduling and management, enabling seamless coordination between doctors and patients. The system combines AI-driven chatbot support with an accessible user interface to improve healthcare accessibility.',
+      technologies: ['React', 'Node.js', 'Socket.io', 'MongoDB', 'Express.js'],
+      github: 'https://github.com/Sainikhil-315/telemedicine',
       liveLink: 'https://telemedicine-demo.com'
     },
     {
       id: 4,
       title: 'Recipe Finder',
-      description: 'Smart recipe discovery platform that helps users find recipes based on available ingredients, dietary preferences, and cooking time. Includes nutritional information, step-by-step cooking guides, and meal planning features.',
-      technologies: ['React', 'Node.js', 'Express.js', 'MongoDB', 'Recipe API', 'Tailwind CSS'],
-      github: 'https://github.com/placeholder/recipe-finder',
+      description: 'The Recipe Sharing Platform is a full-stack web application that allows users to search and share recipes based on ingredients and cuisine preferences. It includes user profile management, recipe creation features, and ingredient-based search with step-by-step cooking instructions. The platform also supports region-based categorization, making recipe discovery more intuitive and culturally diverse.',
+      technologies: ['React', 'Node.js', 'Express.js', 'MongoDB', 'Bootstrap', 'Docker'],
+      github: 'https://github.com/Sainikhil-315/recipe-finder',
       liveLink: 'https://recipe-finder-demo.com'
     },
     {
       id: 5,
       title: 'CineSphere',
-      description: 'Comprehensive movie and TV show discovery platform with personalized recommendations, watchlists, reviews, and social features. Integrates with multiple streaming services to show availability and provides detailed movie information and ratings.',
-      technologies: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Movie Database API', 'Express.js'],
-      github: 'https://github.com/placeholder/cinesphere',
+      description: 'CineSphere is an engaging movie discovery platform that lets users explore trending, upcoming, and top-rated films with search and browse functionality. It features detailed movie pages, trailer integration, and personalized watchlist creation for a tailored experience. With its responsive and modern interface, the platform ensures seamless exploration across devices.',
+      technologies: ['React', 'Node.js', 'MongoDB', 'TMDB API', 'Express.js'],
+      github: 'https://github.com/Sainikhil-315/CineSphere',
       liveLink: 'https://cinesphere-demo.com'
     }
   ];
@@ -82,7 +82,7 @@ const Projects = () => {
                 <div className="absolute left-6 w-4 h-4 bg-primary rounded-full border-4 border-background hidden md:block" />
 
                 {/* Content card */}
-                <div className="md:ml-20 premium-border p-8 hover-lift group glow-effect-hover">
+                <div className="md:ml-20 premium-border p-8 hover-lift group glow-effect-hover hover:shadow-[0_0_25px_rgba(255,255,255,0.6)] transition duration-300 ease-in-out">
                   <div className="grid lg:grid-cols-2 gap-8">
                     {/* Project Info */}
                     <div className="space-y-6">
