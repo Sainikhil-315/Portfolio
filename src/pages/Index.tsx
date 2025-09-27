@@ -1,15 +1,21 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Experience from '@/components/Experience';
 import Skills from '@/components/Skills';
 import Projects from '@/components/Projects';
-
 import Contact from '@/components/Contact';
+import LoadingScreen from '@/components/LoadingScreen';
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     // Smooth scrolling setup
     const smoothScroll = (e: Event) => {
@@ -26,6 +32,10 @@ const Index = () => {
     document.addEventListener('click', smoothScroll);
     return () => document.removeEventListener('click', smoothScroll);
   }, []);
+
+  if (isLoading) {
+    return <LoadingScreen onComplete={handleLoadingComplete} />;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
