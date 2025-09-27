@@ -22,7 +22,7 @@ const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const totalDuration = 5500; // 5.5 seconds
+    const totalDuration = 3000; // Reduced to 3 seconds for faster loading
     const greetingDuration = totalDuration / greetings.length;
     
     // Progress bar animation

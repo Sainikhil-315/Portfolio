@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,16 +58,18 @@ const Navigation = () => {
       <div className="bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl"
     >
         <div className="flex items-center justify-between h-16 px-6">
-          {/* Logo */}
-          <motion.div
-            className="text-2xl font-playfair font-bold cursor-pointer"
-            whileHover={{ scale: 1.05 }}
-            onClick={() => scrollToSection('#home')}
-          >
-            <span className="text-white font-bold">
-              Sai Nikhil
-            </span>
-          </motion.div>
+          <div className="flex items-center space-x-4">
+            <motion.div
+              className="text-2xl font-playfair font-bold cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => scrollToSection('#home')}
+            >
+              <span className="text-white font-bold">
+                Sai Nikhil
+              </span>
+            </motion.div>
+            <ThemeToggle />
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
