@@ -89,7 +89,7 @@ const Hero = () => {
             >
               <Button 
                 size="lg" 
-                className="group premium-border hover-lift glow-effect"
+                className="group premium-border hover-lift glow-effect bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <Download className="mr-2 h-5 w-5 group-hover:animate-bounce" />
                 Download Resume
@@ -100,6 +100,7 @@ const Hero = () => {
                   variant="outline" 
                   size="lg" 
                   className="glass-effect hover-lift group"
+                  onClick={() => window.open('https://github.com/yourusername', '_blank')}
                 >
                   <Github className="h-5 w-5 group-hover:rotate-12 transition-transform" />
                 </Button>
@@ -107,6 +108,7 @@ const Hero = () => {
                   variant="outline" 
                   size="lg" 
                   className="glass-effect hover-lift group"
+                  onClick={() => window.open('https://linkedin.com/in/yourusername', '_blank')}
                 >
                   <Linkedin className="h-5 w-5 group-hover:scale-110 transition-transform" />
                 </Button>
@@ -114,6 +116,15 @@ const Hero = () => {
                   variant="outline" 
                   size="lg" 
                   className="glass-effect hover-lift group"
+                  onClick={() => window.open('https://leetcode.com/u/Sai_Nikhil_315/', '_blank')}
+                >
+                  <Code className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="glass-effect hover-lift group"
+                  onClick={() => window.open('mailto:your-email@example.com', '_blank')}
                 >
                   <Mail className="h-5 w-5 group-hover:animate-pulse" />
                 </Button>

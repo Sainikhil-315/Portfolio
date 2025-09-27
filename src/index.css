@@ -91,6 +91,10 @@
   .glow-effect:hover::before {
     @apply opacity-100;
   }
+  
+  .glow-effect-hover {
+    @apply transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-white/30;
+  }
 }
 
 /* Custom scrollbar */

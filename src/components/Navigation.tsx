@@ -46,31 +46,24 @@ const Navigation = () => {
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isInHero 
-          ? 'bg-transparent' 
-          : scrolled 
-            ? 'glass-effect shadow-lg' 
-            : 'bg-background/80 backdrop-blur-sm'
-      }`}
+      className="fixed top-2 left-4 right-4 z-50 transition-all duration-500"
       initial={{ y: -100 }}
       animate={{ 
         y: 0,
-        opacity: isInHero ? 0.9 : 1
+        opacity: 1
       }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+      <div className="bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl"
+    >
+        <div className="flex items-center justify-between h-16 px-6">
           {/* Logo */}
           <motion.div
             className="text-2xl font-playfair font-bold cursor-pointer"
             whileHover={{ scale: 1.05 }}
             onClick={() => scrollToSection('#home')}
           >
-            <span className={`transition-colors duration-300 ${
-              isInHero ? 'text-foreground' : 'text-gradient'
-            }`}>
+            <span className="text-white font-bold">
               Sai Nikhil
             </span>
           </motion.div>
@@ -80,22 +73,14 @@ const Navigation = () => {
             {navItems.map((item, index) => (
               <motion.button
                 key={item.label}
-                className={`text-sm font-medium transition-all duration-300 relative group ${
-                  isInHero 
-                    ? 'text-foreground/80 hover:text-foreground' 
-                    : 'text-foreground/70 hover:text-gradient'
-                }`}
+                className="text-sm font-medium transition-all duration-300 relative group text-white/80 hover:text-white"
                 onClick={() => scrollToSection(item.href)}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 {item.label}
-                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
-                  isInHero 
-                    ? 'bg-foreground' 
-                    : 'bg-gradient-to-r from-primary to-primary/60'
-                }`} />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 bg-white" />
               </motion.button>
             ))}
           </div>
@@ -104,7 +89,7 @@ const Navigation = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden"
+            className="md:hidden text-white hover:bg-white/10"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
