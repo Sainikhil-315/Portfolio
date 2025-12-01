@@ -160,7 +160,11 @@ const Hero = () => {
                 />
                 
                 <div className="absolute inset-8 rounded-full bg-gradient-to-br from-card via-accent to-muted glass-effect flex items-center justify-center">
-                  <span className="text-6xl font-playfair font-bold text-gradient">SN</span>
+                    <img 
+                      src="/OMS_4611.jpg" 
+                      alt="Sai Nikhil Mullapudi" 
+                      className="w-full h-full object-cover rounded-full"
+                     />
                 </div>
                 
                 {[
