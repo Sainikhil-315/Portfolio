@@ -104,7 +104,7 @@ const Hero = () => {
                   variant="outline" 
                   size="lg" 
                   className="glass-effect hover-lift group"
-                  onClick={() => window.open('https://github.com/yourusername', '_blank')}
+                  onClick={() => window.open('https://github.com/Sainikhil-315', '_blank')}
                 >
                   <Github className="h-5 w-5 group-hover:rotate-12 transition-transform" />
                 </Button>
@@ -112,7 +112,7 @@ const Hero = () => {
                   variant="outline" 
                   size="lg" 
                   className="glass-effect hover-lift group"
-                  onClick={() => window.open('https://linkedin.com/in/yourusername', '_blank')}
+                  onClick={() => window.open('https://in.linkedin.com/in/sai-nikhil-mullapudi-24522a303', '_blank')}
                 >
                   <Linkedin className="h-5 w-5 group-hover:scale-110 transition-transform" />
                 </Button>
@@ -128,7 +128,7 @@ const Hero = () => {
                   variant="outline" 
                   size="lg" 
                   className="glass-effect hover-lift group"
-                  onClick={() => window.open('mailto:your-email@example.com', '_blank')}
+                  onClick={() => window.open('mailto: sainikhilmullapudi1604@gmail.com', '_blank')}
                 >
                   <Mail className="h-5 w-5 group-hover:animate-pulse" />
                 </Button>
