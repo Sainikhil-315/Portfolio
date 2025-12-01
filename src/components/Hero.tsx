@@ -167,7 +167,7 @@ const Hero = () => {
                      />
                 </div>
                 
-                {[
+                {/*{[
                   { icon: '⚛️', label: 'React' },
                   { icon: '🟢', label: 'Node.js' },
                   { icon: '🎨', label: 'Tailwind' },
@@ -199,7 +199,7 @@ const Hero = () => {
                   >
                     {item.icon}
                   </motion.div>
-                ))}
+                ))}*/}
               </motion.div>
             </motion.div>
           </div>
