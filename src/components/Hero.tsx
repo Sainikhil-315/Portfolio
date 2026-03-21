@@ -45,7 +45,6 @@ const Hero = () => {
               >
                 <span className="block text-gradient">Sai Nikhil</span>
                 <span className="block">Mullapudi</span>
-                <span className='text-sm lg:text-sm font-playfair font-bold text-white'>Portfolio under progress</span>
               </motion.h1>
               <motion.h2 className="text-2xl lg:text-2xl font-playfair font-bold">
                 <span className="block text-gradient">Web Developer</span>
@@ -68,15 +67,15 @@ const Hero = () => {
               >
                 <div className="flex items-center gap-2">
                   <Github className="h-4 w-4 text-primary" />
-                  <span>90+ Contributions</span>
+                  <span>200+ Contributions</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Database className="h-4 w-4 text-primary" />
-                  <span>19 Repositories</span>
+                  <span>22 Repositories</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Code className="h-4 w-4 text-primary" />
-                  <span>95+ LeetCode Problems</span>
+                  <span>130+ LeetCode Problems</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap className="h-4 w-4 text-primary" />
@@ -91,9 +90,17 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="group premium-border hover-lift glow-effect bg-primary text-white hover:bg-primary/90"
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = '/resume.pdf';
+                  link.download = 'Sai_Nikhil_Mullapudi_Resume.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
               >
                 <Download className="mr-2 h-5 w-5 group-hover:animate-bounce" />
                 Download Resume

@@ -7,8 +7,8 @@ const About = () => {
 
   const stats = [
     { number: 3, suffix: '+', label: 'Major Projects' },
-    { number: 2, suffix: '', label: 'Hackathon Wins' },
-    { number: 9.5, suffix: '', label: 'CGPA' },
+    { number: 4, suffix: '', label: 'Hackathon Wins' },
+    { number: 9.46, suffix: '', label: 'CGPA' },
     { number: 10, suffix: '+', label: 'Technologies Mastered' },
   ];
 
@@ -36,7 +36,7 @@ const About = () => {
                   viewport={{ once: true }}
                 >
                   I'm currently pursuing B.Tech in Artificial Intelligence & Data Science 
-                  at SRKR Engineering College, Bhimavaram with a CGPA of 9.50/10.0. 
+                  at SRKR Engineering College, Bhimavaram with a CGPA of 9.46/10.0. 
                   My passion for full-stack development drives me to create innovative solutions.
                 </motion.p>
                 
