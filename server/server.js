@@ -2,11 +2,31 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Resend } from 'resend';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
 const app = express();
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Rate limiters
+const emailLimiter = rateLimit({
+  windowMs: parseInt(process.env.EMAIL_RATE_WINDOW || '3600000'), // default: 1 hour in ms
+  max: parseInt(process.env.EMAIL_RATE_MAX || '5'), // Max 5 emails per hour per IP
+  message: 'Too many emails sent from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === 'development', // Skip in development
+});
+
+const generalLimiter = rateLimit({
+  windowMs: parseInt(process.env.GENERAL_RATE_WINDOW || '900000'), // default: 15 min in ms
+  max: parseInt(process.env.GENERAL_RATE_MAX || '100'), // Max 100 requests per 15 min per IP
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === 'development', // Skip in development
+});
 
 // Middleware
 app.use(cors({
@@ -16,13 +36,16 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Apply general rate limiter to all API routes
+app.use('/api/', generalLimiter);
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Email server is running' });
 });
 
-// Send email endpoint
-app.post('/api/send-email', async (req, res) => {
+// Send email endpoint (with stricter rate limit)
+app.post('/api/send-email', emailLimiter, async (req, res) => {
   try {
     const { name, email, phone, message } = req.body;
 
