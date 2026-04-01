@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import emailjs from '@emailjs/browser';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -24,20 +23,26 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      // EmailJS configuration - Replace with your credentials
-      const serviceId = 'service_xw4ez7h';
-      const templateId = 'z1tzvuo';
-      const publicKey = 'SkEEDLBCgMXsPbWiv';
+      // Call backend API endpoint to send email via Resend
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        }),
+      });
 
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        from_phone: formData.phone,
-        message: formData.message,
-        to_email: 'sainikhilmullapudi1604@gmail.com'
-      };
+      const data = await response.json();
 
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to send email');
+      }
 
       toast({
         title: "Email sent successfully!",
@@ -47,9 +52,10 @@ const Contact = () => {
       setFormData({ name: '', email: '', phone: '', message: '' });
       setShowOptions(false);
     } catch (error) {
+      console.error('Error sending email:', error);
       toast({
         title: "Failed to send email",
-        description: "Please try WhatsApp or email me directly.",
+        description: error instanceof Error ? error.message : "Please try WhatsApp or email me directly.",
         variant: "destructive"
       });
     } finally {
