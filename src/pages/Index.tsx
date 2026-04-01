@@ -6,6 +6,7 @@ import About from '@/components/About';
 import Experience from '@/components/Experience';
 import Skills from '@/components/Skills';
 import Projects from '@/components/Projects';
+import Achievements from '@/components/Achievements';
 import Contact from '@/components/Contact';
 import LoadingScreen from '@/components/LoadingScreen';
 
@@ -62,6 +63,10 @@ const Index = () => {
           <Projects />
         </section>
         
+        <section id="achievements">
+          <Achievements />
+        </section>
+        
         <section id="contact">
           <Contact />
         </section>
@@ -71,7 +76,7 @@ const Index = () => {
       <footer className="py-8 border-t border-border/20">
         <div className="container mx-auto px-4 text-center">
           <p className="text-muted-foreground">
-            © 2024 Sai Nikhil Mullapudi. Built with React, TypeScript, and lots of ☕
+            © 2025 Sai Nikhil Mullapudi. Built with React, TypeScript, and lots of ☕ Coffeeee!!
           </p>
         </div>
       </footer>

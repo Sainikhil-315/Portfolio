@@ -28,12 +28,32 @@ const generalLimiter = rateLimit({
   skip: (req) => process.env.NODE_ENV === 'development', // Skip in development
 });
 
-// Middleware
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+// CORS Configuration - Allow multiple origins for dev and prod
+const corsOptions = {
+  origin: function (origin, callback) {
+    // List of allowed origins
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://localhost:8080',
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:8080',
+      process.env.CLIENT_URL || 'https://portfoliosainikhil.vercel.app'
+    ];
+
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST'],
   credentials: true
-}));
+};
+
+// Middleware
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Apply general rate limiter to all API routes
@@ -98,6 +118,189 @@ app.post('/api/send-email', emailLimiter, async (req, res) => {
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Internal server error'
+    });
+  }
+});
+
+// Cache for LeetCode stats (6 hours)
+let leetcodeCache = {
+  data: null,
+  timestamp: null,
+  CACHE_DURATION: 6 * 60 * 60 * 1000, // 6 hours
+};
+
+// LeetCode stats endpoint
+app.get('/api/leetcode-stats', async (req, res) => {
+  try {
+    const username = process.env.LEETCODE_USERNAME || 'Sai_Nikhil_315';
+    
+    // Check cache
+    if (leetcodeCache.data && leetcodeCache.timestamp) {
+      const now = Date.now();
+      if (now - leetcodeCache.timestamp < leetcodeCache.CACHE_DURATION) {
+        console.log('Returning cached LeetCode stats');
+        return res.json({
+          success: true,
+          data: leetcodeCache.data,
+          cached: true,
+          lastUpdated: new Date(leetcodeCache.timestamp)
+        });
+      }
+    }
+
+    // Fetch fresh data from LeetCode GraphQL API
+    const query = `{
+      matchedUser(username: "${username}") {
+        username
+        profile {
+          userAvatar
+          realName
+          aboutMe
+        }
+        submitStats {
+          acSubmissionNum {
+            difficulty
+            count
+            submissions
+          }
+          totalSubmissionNum {
+            difficulty
+            count
+            submissions
+          }
+        }
+        userCalendar {
+          submissionCalendar
+        }
+      }
+      userContestRanking(username: "${username}") {
+        attendedContestsCount
+        rating
+        globalRanking
+        totalParticipants
+        topPercentage
+      }
+    }`;
+
+    console.log('Fetching LeetCode stats for:', username);
+
+    const response = await fetch('https://leetcode.com/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://leetcode.com/'
+      },
+      body: JSON.stringify({ query: query })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`LeetCode API error - Status: ${response.status}, Response:`, errorText);
+      throw new Error(`LeetCode API error: ${response.status} - ${errorText}`);
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      console.error('LeetCode GraphQL errors:', result.errors);
+      throw new Error(`GraphQL error: ${JSON.stringify(result.errors)}`);
+    }
+
+    if (!result.data?.matchedUser) {
+      console.error('No matchedUser in response:', result.data);
+      return res.status(404).json({
+        success: false,
+        error: 'LeetCode user not found'
+      });
+    }
+
+    const userData = result.data.matchedUser;
+    const contestData = result.data.userContestRanking;
+    
+    // Calculate total solved from acSubmissionNum
+    const allItem = userData.submitStats?.acSubmissionNum?.find(item => item.difficulty === 'All') || { count: 0, submissions: 0 };
+    const easyItem = userData.submitStats?.acSubmissionNum?.find(item => item.difficulty === 'Easy') || { count: 0, submissions: 0 };
+    const mediumItem = userData.submitStats?.acSubmissionNum?.find(item => item.difficulty === 'Medium') || { count: 0, submissions: 0 };
+    const hardItem = userData.submitStats?.acSubmissionNum?.find(item => item.difficulty === 'Hard') || { count: 0, submissions: 0 };
+
+    // Parse calendar data
+    let totalSubmissions = 0;
+    let lastSubmissionDate = null;
+    if (userData.userCalendar?.submissionCalendar) {
+      const calendar = JSON.parse(userData.userCalendar.submissionCalendar);
+      totalSubmissions = Object.values(calendar).reduce((sum, count) => sum + count, 0);
+      
+      // Find most recent submission date
+      const timestamps = Object.keys(calendar).map(Number).sort((a, b) => b - a);
+      if (timestamps.length > 0) {
+        lastSubmissionDate = new Date(timestamps[0] * 1000);
+      }
+    }
+
+    // Build stats object
+    const stats = {
+      username: userData.username,
+      avatar: userData.profile?.userAvatar,
+      realName: userData.profile?.realName,
+      aboutMe: userData.profile?.aboutMe,
+      problemsSolved: {
+        total: allItem.count,
+        easy: easyItem.count,
+        medium: mediumItem.count,
+        hard: hardItem.count,
+        easySub: easyItem.submissions,
+        mediumSub: mediumItem.submissions,
+        hardSub: hardItem.submissions
+      },
+      submissions: {
+        total: allItem.submissions,
+        calendar: userData.userCalendar?.submissionCalendar || '{}'
+      },
+      contest: {
+        attended: contestData?.attendedContestsCount || 0,
+        rating: Math.round(contestData?.rating * 100) / 100 || 0,
+        ranking: contestData?.globalRanking || 0,
+        totalParticipants: contestData?.totalParticipants || 0,
+        topPercentage: Math.round(contestData?.topPercentage * 100) / 100 || 0
+      },
+      stats: {
+        totalSubmissions: totalSubmissions,
+        lastSubmissionDate: lastSubmissionDate
+      }
+    };
+
+    console.log('Successfully fetched LeetCode stats:', stats);
+
+    // Update cache
+    leetcodeCache.data = stats;
+    leetcodeCache.timestamp = Date.now();
+
+    res.json({
+      success: true,
+      data: stats,
+      cached: false,
+      lastUpdated: new Date()
+    });
+
+  } catch (error) {
+    console.error('LeetCode stats error:', error);
+    
+    // Return cached data if available, even if expired
+    if (leetcodeCache.data) {
+      return res.json({
+        success: true,
+        data: leetcodeCache.data,
+        cached: true,
+        stale: true,
+        lastUpdated: new Date(leetcodeCache.timestamp),
+        error: error instanceof Error ? error.message : 'Using stale cache due to fetch error'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch LeetCode stats'
     });
   }
 });
