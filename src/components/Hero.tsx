@@ -1,8 +1,39 @@
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Download, Code, Database, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 
 const Hero = () => {
+  const [solved, setSolved] = useState(0);
+  const [rating, setRating] = useState(0);
+  useEffect(() => {
+    const leetCodeProblems = async () => {
+      try {
+        // Fetch problems
+        const problemsRes = await fetch('https://leetcode-stats-api.herokuapp.com/Sai_Nikhil_315');
+        if (!problemsRes.ok) {
+          console.error('Problems API failed:', problemsRes.status);
+        } else {
+          const data = await problemsRes.json();
+          setSolved(data.totalSolved || 0);
+        }
+
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const ratingRes = await fetch(`${apiUrl}/api/leetcode-stats`);
+        console.log('Rating response status:', ratingRes.status);
+        
+        if (!ratingRes.ok) {
+          console.error('Rating API failed:', ratingRes.status, await ratingRes.text());
+        } else {
+          const ratingData = await ratingRes.json();
+          setRating(Math.floor(ratingData.data.contest.rating) || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching LeetCode data:', error);
+      }
+    };
+    leetCodeProblems();
+  }, []);
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
       {/* Animated background grid */}
@@ -75,11 +106,11 @@ const Hero = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Code className="h-4 w-4 text-primary" />
-                  <span>130+ LeetCode Problems</span>
+                  <span>{solved} LeetCode Problems</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Zap className="h-4 w-4 text-primary" />
-                  <span>1400+ Contest Rating</span>
+                  <span>{rating} Contest Rating</span>
                 </div>
               </motion.div>
             </motion.div>

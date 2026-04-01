@@ -9,29 +9,26 @@ dotenv.config();
 const app = express();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Rate limiters
 const emailLimiter = rateLimit({
-  windowMs: parseInt(process.env.EMAIL_RATE_WINDOW || '3600000'), // default: 1 hour in ms
-  max: parseInt(process.env.EMAIL_RATE_MAX || '5'), // Max 5 emails per hour per IP
+  windowMs: parseInt(process.env.EMAIL_RATE_WINDOW || '3600000'),
+  max: parseInt(process.env.EMAIL_RATE_MAX || '5'),
   message: 'Too many emails sent from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => process.env.NODE_ENV === 'development', // Skip in development
+  skip: (req) => process.env.NODE_ENV === 'development',
 });
 
 const generalLimiter = rateLimit({
-  windowMs: parseInt(process.env.GENERAL_RATE_WINDOW || '900000'), // default: 15 min in ms
-  max: parseInt(process.env.GENERAL_RATE_MAX || '100'), // Max 100 requests per 15 min per IP
+  windowMs: parseInt(process.env.GENERAL_RATE_WINDOW || '900000'),
+  max: parseInt(process.env.GENERAL_RATE_MAX || '100'),
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => process.env.NODE_ENV === 'development', // Skip in development
+  skip: (req) => process.env.NODE_ENV === 'development',
 });
 
-// CORS Configuration - Allow multiple origins for dev and prod
 const corsOptions = {
   origin: function (origin, callback) {
-    // List of allowed origins
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:5173',
@@ -40,8 +37,6 @@ const corsOptions = {
       'http://127.0.0.1:8080',
       process.env.CLIENT_URL || 'https://portfoliosainikhil.vercel.app'
     ];
-
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -52,34 +47,22 @@ const corsOptions = {
   credentials: true
 };
 
-// Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
-
-// Apply general rate limiter to all API routes
 app.use('/api/', generalLimiter);
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Email server is running' });
 });
 
-// Send email endpoint (with stricter rate limit)
 app.post('/api/send-email', emailLimiter, async (req, res) => {
   try {
     const { name, email, phone, message } = req.body;
-
-    // Validate input
     if (!name || !email || !message) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields: name, email, and message'
-      });
+      return res.status(400).json({ success: false, error: 'Missing required fields: name, email, and message' });
     }
-
-    // Send email using Resend
     const result = await resend.emails.send({
-      from: 'Contact Form <onboarding@resend.dev>', // Use your domain email after verifying in Resend
+      from: 'Contact Form <onboarding@resend.dev>',
       to: process.env.RECIPIENT_EMAIL || 'sainikhilmullapudi1604@gmail.com',
       replyTo: email,
       subject: `New contact form submission from ${name}`,
@@ -98,43 +81,27 @@ app.post('/api/send-email', emailLimiter, async (req, res) => {
         </div>
       `
     });
-
     if (result.error) {
       console.error('Resend error:', result.error);
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to send email'
-      });
+      return res.status(500).json({ success: false, error: 'Failed to send email' });
     }
-
-    res.json({
-      success: true,
-      message: 'Email sent successfully',
-      id: result.data.id
-    });
-
+    res.json({ success: true, message: 'Email sent successfully', id: result.data.id });
   } catch (error) {
     console.error('Server error:', error);
-    res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Internal server error'
-    });
+    res.status(500).json({ success: false, error: error instanceof Error ? error.message : 'Internal server error' });
   }
 });
 
-// Cache for LeetCode stats (6 hours)
 let leetcodeCache = {
   data: null,
   timestamp: null,
-  CACHE_DURATION: 6 * 60 * 60 * 1000, // 6 hours
+  CACHE_DURATION: 6 * 60 * 60 * 1000,
 };
 
-// LeetCode stats endpoint
 app.get('/api/leetcode-stats', async (req, res) => {
   try {
     const username = process.env.LEETCODE_USERNAME || 'Sai_Nikhil_315';
-    
-    // Check cache
+
     if (leetcodeCache.data && leetcodeCache.timestamp) {
       const now = Date.now();
       if (now - leetcodeCache.timestamp < leetcodeCache.CACHE_DURATION) {
@@ -148,7 +115,7 @@ app.get('/api/leetcode-stats', async (req, res) => {
       }
     }
 
-    // Fetch fresh data from LeetCode GraphQL API
+    // Single query fetching everything including contest history
     const query = `{
       matchedUser(username: "${username}") {
         username
@@ -180,6 +147,15 @@ app.get('/api/leetcode-stats', async (req, res) => {
         totalParticipants
         topPercentage
       }
+      userContestRankingHistory(username: "${username}") {
+        attended
+        rating
+        ranking
+        contest {
+          title
+          startTime
+        }
+      }
     }`;
 
     console.log('Fetching LeetCode stats for:', username);
@@ -191,7 +167,7 @@ app.get('/api/leetcode-stats', async (req, res) => {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Referer': 'https://leetcode.com/'
       },
-      body: JSON.stringify({ query: query })
+      body: JSON.stringify({ query })
     });
 
     if (!response.ok) {
@@ -209,36 +185,24 @@ app.get('/api/leetcode-stats', async (req, res) => {
 
     if (!result.data?.matchedUser) {
       console.error('No matchedUser in response:', result.data);
-      return res.status(404).json({
-        success: false,
-        error: 'LeetCode user not found'
-      });
+      return res.status(404).json({ success: false, error: 'LeetCode user not found' });
     }
 
     const userData = result.data.matchedUser;
     const contestData = result.data.userContestRanking;
-    
-    // Calculate total solved from acSubmissionNum
+    const contestHistory = result.data.userContestRankingHistory || [];
+
     const allItem = userData.submitStats?.acSubmissionNum?.find(item => item.difficulty === 'All') || { count: 0, submissions: 0 };
     const easyItem = userData.submitStats?.acSubmissionNum?.find(item => item.difficulty === 'Easy') || { count: 0, submissions: 0 };
     const mediumItem = userData.submitStats?.acSubmissionNum?.find(item => item.difficulty === 'Medium') || { count: 0, submissions: 0 };
     const hardItem = userData.submitStats?.acSubmissionNum?.find(item => item.difficulty === 'Hard') || { count: 0, submissions: 0 };
 
-    // Parse calendar data
     let totalSubmissions = 0;
-    let lastSubmissionDate = null;
     if (userData.userCalendar?.submissionCalendar) {
       const calendar = JSON.parse(userData.userCalendar.submissionCalendar);
       totalSubmissions = Object.values(calendar).reduce((sum, count) => sum + count, 0);
-      
-      // Find most recent submission date
-      const timestamps = Object.keys(calendar).map(Number).sort((a, b) => b - a);
-      if (timestamps.length > 0) {
-        lastSubmissionDate = new Date(timestamps[0] * 1000);
-      }
     }
 
-    // Build stats object
     const stats = {
       username: userData.username,
       avatar: userData.profile?.userAvatar,
@@ -264,15 +228,17 @@ app.get('/api/leetcode-stats', async (req, res) => {
         totalParticipants: contestData?.totalParticipants || 0,
         topPercentage: Math.round(contestData?.topPercentage * 100) / 100 || 0
       },
+      // Only include attended contests with valid ratings, sorted by time
+      contestHistory: contestHistory
+        .filter(h => h.attended && h.rating > 0)
+        .sort((a, b) => a.contest.startTime - b.contest.startTime),
       stats: {
-        totalSubmissions: totalSubmissions,
-        lastSubmissionDate: lastSubmissionDate
+        totalSubmissions,
       }
     };
 
-    console.log('Successfully fetched LeetCode stats:', stats);
+    console.log('Successfully fetched LeetCode stats. Contest history entries:', stats.contestHistory.length);
 
-    // Update cache
     leetcodeCache.data = stats;
     leetcodeCache.timestamp = Date.now();
 
@@ -285,8 +251,7 @@ app.get('/api/leetcode-stats', async (req, res) => {
 
   } catch (error) {
     console.error('LeetCode stats error:', error);
-    
-    // Return cached data if available, even if expired
+
     if (leetcodeCache.data) {
       return res.json({
         success: true,
@@ -305,21 +270,13 @@ app.get('/api/leetcode-stats', async (req, res) => {
   }
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
-  res.status(500).json({
-    success: false,
-    error: 'Internal server error'
-  });
+  res.status(500).json({ success: false, error: 'Internal server error' });
 });
 
-// 404 handler
 app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    error: 'Endpoint not found'
-  });
+  res.status(404).json({ success: false, error: 'Endpoint not found' });
 });
 
 const PORT = process.env.PORT || 3001;
@@ -329,12 +286,6 @@ app.listen(PORT, () => {
 });
 
 function escapeHtml(text) {
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
-  };
+  const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
   return text.replace(/[&<>"']/g, m => map[m]);
 }
