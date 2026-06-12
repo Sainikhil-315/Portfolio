@@ -1,160 +1,237 @@
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/fraunces/wght-italic.css';
+@import '@fontsource-variable/archivo';
+@import '@fontsource/spline-sans-mono';
+@import '@fontsource/spline-sans-mono/500.css';
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Premium black and white design system */
+/* ————————————————————————————————————————————————
+   THE INDEX — Editorial × Swiss design system
+   paper / ink / cobalt · Fraunces / Archivo / Spline Sans Mono
+   ———————————————————————————————————————————————— */
 
 @layer base {
   :root {
-    --background: 0 0% 2%;
-    --foreground: 0 0% 98%;
+    /* core tokens — light (paper) */
+    --paper: 40 33% 95%;          /* #F5F2EB */
+    --paper-raised: 40 27% 91%;   /* #EDE9E0 */
+    --ink: 36 10% 9%;             /* #1A1714 */
+    --ink-muted: 36 8% 38%;       /* #6A6258 */
+    --hairline: 38 14% 80%;       /* #D4CEC2 */
+    --accent: 237 91% 55%;        /* #2333F5 electric cobalt */
+    --accent-ink: 0 0% 100%;
 
-    --card: 0 0% 4%;
-    --card-foreground: 0 0% 95%;
+    /* theme-invariant LeetCode difficulty colors (data contract) */
+    --lc-easy: 174 100% 36%;      /* #00b8a3 */
+    --lc-medium: 44 100% 56%;     /* #ffc01e */
+    --lc-hard: 1 84% 60%;         /* #ef4743 */
 
-    --popover: 0 0% 4%;
-    --popover-foreground: 0 0% 95%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 2%;
-
-    --secondary: 0 0% 8%;
-    --secondary-foreground: 0 0% 90%;
-
-    --muted: 0 0% 6%;
-    --muted-foreground: 0 0% 60%;
-
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 95%;
-
-    --destructive: 0 84.2% 60.2%;
+    /* shadcn mapping */
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: var(--paper-raised);
+    --card-foreground: var(--ink);
+    --popover: var(--paper);
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: var(--paper);
+    --secondary: var(--paper-raised);
+    --secondary-foreground: var(--ink);
+    --muted: var(--paper-raised);
+    --muted-foreground: var(--ink-muted);
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
+    --border: var(--hairline);
+    --input: var(--hairline);
+    --ring: var(--accent);
 
-    --border: 0 0% 12%;
-    --input: 0 0% 12%;
-    --ring: 0 0% 20%;
+    --radius: 0rem;
 
-    --radius: 0.5rem;
-
-    /* Custom premium colors */
-    --premium-gold: 45 100% 85%;
-    --premium-silver: 0 0% 70%;
-    --charcoal: 0 0% 8%;
-    --jet-black: 0 0% 4%;
-    --pearl-white: 0 0% 96%;
+    --grain-opacity: 0.04;
   }
 
   .dark {
-    --background: 0 0% 2%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 4%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 4%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 2%;
-    --secondary: 0 0% 8%;
-    --secondary-foreground: 0 0% 90%;
-    --muted: 0 0% 6%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 95%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 12%;
-    --input: 0 0% 12%;
-    --ring: 0 0% 20%;
-  }
+    /* warm charcoal inversion — never pure black */
+    --paper: 30 8% 8%;            /* #161412 */
+    --paper-raised: 32 8% 12%;    /* #211E1A */
+    --ink: 40 25% 90%;            /* #EAE5DA */
+    --ink-muted: 38 9% 58%;       /* #9C9486 */
+    --hairline: 35 8% 22%;        /* #3D382F */
+    --accent: 235 100% 70%;       /* #6670FF lifted cobalt */
+    --accent-ink: 30 8% 8%;
 
-  .light {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --grain-opacity: 0.06;
   }
 
   * {
     @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground font-inter;
-    font-feature-settings: "cv11", "ss01";
-    font-variation-settings: "opsz" 32;
+    min-width: 0;
   }
 
   html {
-    scroll-behavior: smooth;
+    /* Lenis owns smooth scroll; native fallback for reduced motion */
+    scroll-behavior: auto;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-ink));
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 2px;
   }
 }
 
-/* Premium animations and effects */
 @layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent;
+  /* —— signature type styles —— */
+  .text-display-2xl {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-size: clamp(3.25rem, 13vw, 12.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    font-variation-settings: 'opsz' 144;
+    font-weight: 560;
   }
-  
-  .premium-border {
-    @apply border border-border bg-card/50 backdrop-blur-sm;
+
+  .text-display-xl {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-size: clamp(2.75rem, 8vw, 7.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    font-variation-settings: 'opsz' 144;
+    font-weight: 540;
   }
-  
-  .glass-effect {
-    @apply bg-card/30 backdrop-blur-md border border-border/20;
+
+  .text-display-lg {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-size: clamp(1.875rem, 4.5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    font-variation-settings: 'opsz' 96;
+    font-weight: 520;
   }
-  
-  .hover-lift {
-    @apply transition-all duration-300 hover:translate-y-[-2px] hover:shadow-2xl;
+
+  .text-label {
+    font-family: 'Spline Sans Mono', ui-monospace, monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 500;
   }
-  
-  .glow-effect {
-    @apply relative;
+
+  .font-serif-italic {
+    font-family: 'Fraunces Variable', Georgia, serif;
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 60, 'WONK' 1;
   }
-  
-  .glow-effect::before {
-    content: '';
-    @apply absolute inset-0 rounded-lg bg-gradient-to-r from-primary/20 to-transparent opacity-0 transition-opacity duration-300;
+
+  /* —— layout ritual —— */
+  .page-margin {
+    padding-left: clamp(1rem, 4vw, 4rem);
+    padding-right: clamp(1rem, 4vw, 4rem);
   }
-  
-  .glow-effect:hover::before {
-    @apply opacity-100;
+
+  .section-pad {
+    padding-top: clamp(6rem, 12vw, 11rem);
+    padding-bottom: clamp(6rem, 12vw, 11rem);
   }
-  
-  .glow-effect-hover {
-    @apply transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-white/30;
+
+  .hairline-t {
+    border-top: 1px solid hsl(var(--hairline));
+  }
+
+  .hairline-b {
+    border-bottom: 1px solid hsl(var(--hairline));
+  }
+
+  /* ink mat for images (dark screenshots on cream need a frame) */
+  .ink-mat {
+    background: hsl(36 10% 9%);
+    padding: 0.5rem;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* split-text FOUC guard: hidden until SplitTextReveal's onSplit reveals */
+  [data-split] {
+    visibility: hidden;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* outlined type for the preloader ink-fill */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px hsl(var(--ink));
   }
 }
 
-/* Custom scrollbar */
+/* custom cursor active: hide native pointer (fine pointers, motion OK only) */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html,
+  a,
+  button,
+  [role='button'] {
+    cursor: none;
+  }
+}
+
+/* —— scrollbar: hairline —— */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  background: hsl(var(--background));
+  background: hsl(var(--paper));
 }
-
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 3px;
+  background: hsl(var(--hairline));
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--ink-muted));
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
+/* —— theme View Transition wipe: kill default cross-fade —— */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* —— marquee CSS fallback (GSAP overrides when active) —— */
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee-x var(--marquee-duration, 30s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+  [data-split] {
+    visibility: visible;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

@@ -8,12 +8,25 @@
       type="image/png"
       href="https://img.icons8.com/ios-filled/500/s.png"
     />
-    <title>Sai Nikhil • Portfolio</title>
+    <title>Sai Nikhil — Full-Stack Developer</title>
     <meta
       name="description"
-      content="Showcasing my projects and skills as a developer."
+      content="Sai Nikhil Mullapudi — full-stack developer. Selected work, experience, and LeetCode ledger."
     />
     <meta name="author" content="Sai Nikhil" />
+    <script>
+      // pre-hydration theme: avoid flash before React mounts
+      (function () {
+        try {
+          var t = localStorage.getItem('portfolio-ui-theme');
+          var dark =
+            t === 'dark' ||
+            ((!t || t === 'system') &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.add(dark ? 'dark' : 'light');
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body>

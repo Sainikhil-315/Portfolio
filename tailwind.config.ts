@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -25,6 +24,25 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				paper: {
+					DEFAULT: 'hsl(var(--paper))',
+					raised: 'hsl(var(--paper-raised))'
+				},
+				ink: {
+					DEFAULT: 'hsl(var(--ink))',
+					muted: 'hsl(var(--ink-muted))'
+				},
+				hairline: 'hsl(var(--hairline))',
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-ink))',
+					ink: 'hsl(var(--accent-ink))'
+				},
+				lc: {
+					easy: 'hsl(var(--lc-easy))',
+					medium: 'hsl(var(--lc-medium))',
+					hard: 'hsl(var(--lc-hard))'
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -41,10 +59,6 @@ export default {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
 				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
-				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))'
@@ -52,18 +66,12 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
-				},
-				premium: {
-					gold: 'hsl(var(--premium-gold))',
-					silver: 'hsl(var(--premium-silver))',
-				},
-				charcoal: 'hsl(var(--charcoal))',
-				'jet-black': 'hsl(var(--jet-black))',
-				'pearl-white': 'hsl(var(--pearl-white))',
+				}
 			},
 			fontFamily: {
-				inter: ['Inter', 'sans-serif'],
-				playfair: ['Playfair Display', 'serif'],
+				serif: ['Fraunces Variable', 'Georgia', 'serif'],
+				sans: ['Archivo Variable', 'Helvetica Neue', 'sans-serif'],
+				mono: ['Spline Sans Mono', 'ui-monospace', 'monospace']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -72,65 +80,17 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				},
-				'fade-in': {
-					'0%': {
-						opacity: '0',
-						transform: 'translateY(20px)'
-					},
-					'100%': {
-						opacity: '1',
-						transform: 'translateY(0)'
-					}
-				},
-				'slide-in-left': {
-					'0%': {
-						opacity: '0',
-						transform: 'translateX(-20px)'
-					},
-					'100%': {
-						opacity: '1',
-						transform: 'translateX(0)'
-					}
-				},
-				'float': {
-					'0%, 100%': {
-						transform: 'translateY(0px)'
-					},
-					'50%': {
-						transform: 'translateY(-10px)'
-					}
-				},
-				'glow': {
-					'0%, 100%': {
-						opacity: '1'
-					},
-					'50%': {
-						opacity: '0.8'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fade-in 0.6s ease-out',
-				'slide-in-left': 'slide-in-left 0.6s ease-out',
-				'float': 'float 3s ease-in-out infinite',
-				'glow': 'glow 2s ease-in-out infinite',
+				'accordion-up': 'accordion-up 0.2s ease-out'
 			}
 		}
 	},
